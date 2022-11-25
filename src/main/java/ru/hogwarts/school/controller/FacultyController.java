@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.exception_handling.NoSuchFacultyException;
 import ru.hogwarts.school.model.Faculty;
@@ -60,7 +59,7 @@ public class FacultyController {
 
     @GetMapping(params = "color")
     public Collection<Faculty> getAllFacultyEqualsColor(
-            @RequestParam(value = "color") String color) {
+            @RequestParam(value = "color", required = false) String color) {
         Collection<Faculty> faculties = facultyService.fetAllFacultyEqualsColor(color);
         if (faculties == null) {
             return Collections.emptyList();
