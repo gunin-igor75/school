@@ -56,24 +56,18 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<Student> getAllStudent() {
-        Collection<Student> students = studentService.getAllStudents();
-        System.out.println(students);
-        return students;
-    }
-
-    @GetMapping(params = "age")
-    public ResponseEntity<Collection<Student>> getAllStudentsEquals(@RequestParam(value = "age",
-            required = false) Integer age) {
-        Collection<Student> students = studentService.getAllStudentEqualsAge(age);
-        return ResponseEntity.ok(Objects.requireNonNullElse(students, Collections.emptyList()));
-    }
-
-    @GetMapping(params = "maiAge, maxAge")
     public ResponseEntity<Collection<Student>> getAllStudentsByAgeBetween(
+            @RequestParam(value = "age", required = false) Integer age,
             @RequestParam(value = "minAge", required = false) Integer minAge,
             @RequestParam(value = "maxAge", required = false) Integer maxAge) {
-        Collection<Student> students = studentService.getAgeBetween(minAge, maxAge);
+        Collection<Student> students;
+        if (age != null) {
+            students = studentService.getAllStudentEqualsAge(age);
+        } else if (minAge != null && maxAge != null) {
+            students = studentService.getAgeBetween(minAge, maxAge);
+        } else {
+            students = studentService.getAllStudents();
+        }
         return ResponseEntity.ok(Objects.requireNonNullElse(students, Collections.emptyList()));
     }
 
