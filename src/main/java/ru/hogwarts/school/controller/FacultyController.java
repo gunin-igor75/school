@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.exception_handling.NoSuchFacultyException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -57,13 +58,19 @@ public class FacultyController {
         return faculties;
     }
 
-    @GetMapping(params = "color")
-    public Collection<Faculty> getAllFacultyEqualsColor(
-            @RequestParam(value = "color", required = false) String color) {
-        Collection<Faculty> faculties = facultyService.fetAllFacultyEqualsColor(color);
-        if (faculties == null) {
-            return Collections.emptyList();
+    @GetMapping(params = "colorName")
+    public Faculty getAllFacultyByColorOrName(
+            @RequestParam(value = "colorName", required = false) String colorName){
+        Faculty faculty = facultyService.findFacultyByColorName(colorName);
+        if (faculty == null) {
+            throw new NoSuchFacultyException("There is no faculty with value = " + colorName +
+                    " in Database");
         }
-        return faculties;
+        return faculty;
     }
+    @GetMapping("/student{id}")
+    public Collection<Student> getStudentFaculty(@PathVariable long id) {
+        return facultyService.findStudents(id);
+    }
+
 }

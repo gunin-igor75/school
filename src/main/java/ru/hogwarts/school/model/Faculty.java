@@ -1,7 +1,10 @@
 package ru.hogwarts.school.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity(name = "faculty")
@@ -14,9 +17,21 @@ public class Faculty {
 
     @Column
     private String color;
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "faculty")
+    @JsonIgnore
+    private Collection<Student> students;
 
     public Faculty() {
 
+    }
+
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
     }
 
     public Faculty(String name, String color) {

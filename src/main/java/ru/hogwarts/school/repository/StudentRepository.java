@@ -8,5 +8,8 @@ import java.util.Collection;
 
 public interface StudentRepository  extends JpaRepository<Student, Long> {
     @Query("select pos from student pos  where pos.age = :age")
-    Collection<Student> findFacultyAge(int age);
+    Collection<Student> findFacultyAge(Integer age);
+
+    Collection<Student> findAllByAgeBetween(Integer minAge, Integer maxAge);
+
 }
