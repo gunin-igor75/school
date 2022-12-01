@@ -19,8 +19,7 @@ public class FacultyController {
 
     @PostMapping
     public Faculty createFaculty(@RequestBody Faculty faculty) {
-        facultyService.createFaculty(faculty);
-        return faculty;
+        return facultyService.createFaculty(faculty);
     }
 
     @GetMapping("{id}")
@@ -40,11 +39,12 @@ public class FacultyController {
 
     @DeleteMapping("{id}")
     public Faculty deleteFaculty(@PathVariable long id) {
-        Faculty faculty = facultyService.deleteFaculty(id);
+        Faculty faculty = facultyService.findFaculty(id);
         if (faculty == null) {
             throw new NoSuchFacultyException("There is no faculty with ID = " + id +
                     " in Database");
         }
+        facultyService.deleteFaculty(id);
         return faculty;
     }
 
