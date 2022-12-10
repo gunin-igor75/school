@@ -17,6 +17,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
+	testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
 
 	runtimeOnly 'org.postgresql:postgresql'
 }

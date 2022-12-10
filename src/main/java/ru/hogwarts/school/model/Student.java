@@ -10,7 +10,7 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    public String name;
+    private String name;
 
     @Column
     private int age;

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.AvatarService;
@@ -47,14 +48,16 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        if (student.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id must by empty");
+        }
         Student newStudent = studentService.createStudent(student);
-        return ResponseEntity.ok(newStudent);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newStudent);
     }
 
     @PutMapping
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
         Student newStudent = studentService.findStudent(student.getId());
-        System.out.println(newStudent);
         if (newStudent == null) {
             return ResponseEntity.badRequest().build();
         }
