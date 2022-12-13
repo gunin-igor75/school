@@ -3,6 +3,7 @@ package ru.hogwarts.school.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "avatar")
 public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,100 @@ public class Avatar {
     }
 
     public long getFileSize() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         return fileSize;
     }
 

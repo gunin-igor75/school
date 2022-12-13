@@ -71,7 +71,7 @@ public class FacultyController {
 
     @GetMapping(params = "colorName")
     public Faculty getAllFacultyByColorOrName(
-            @RequestParam(value = "colorName", required = false) String colorName){
+            @RequestParam(value = "colorName", required = false) String colorName) {
         Faculty faculty = facultyService.findFacultyByColorName(colorName);
         if (faculty == null) {
             throw new NoSuchFacultyException("There is no faculty with value = " + colorName +
@@ -79,6 +79,7 @@ public class FacultyController {
         }
         return faculty;
     }
+
     @GetMapping("/student{id}")
     public Collection<Student> getStudentFaculty(@PathVariable long id) {
         return facultyService.findStudents(id);

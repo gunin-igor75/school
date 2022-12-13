@@ -90,42 +90,26 @@ public class StudentController {
         return ResponseEntity.ok(Objects.requireNonNullElse(students, Collections.emptyList()));
     }
 
-    @GetMapping("/faculty{id}")
+    @GetMapping("/faculty/{id}")
     public ResponseEntity<Faculty> getFacultyStudent(@PathVariable long id) {
         Faculty faculty = studentService.findFaculty(id);
         return ResponseEntity.ok(faculty);
     }
 
-    @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatar(@PathVariable long id,
-                                               @RequestParam MultipartFile file) throws IOException {
-        if (file.getSize() > 1024 * 300) {
-            return ResponseEntity.badRequest().body("File is to big");
-        }
-        avatarService.uploadAvatar(id, file);
-        return ResponseEntity.ok().build();
+
+
+    @GetMapping("/count-student")
+    public int getCountStudent() {
+        return studentService.getCountStudent();
     }
 
-    @GetMapping(value = "{id}/avatar-from-db")
-    public ResponseEntity<byte[]> downLoadAvatar(@PathVariable long id) throws Exception {
-        Avatar avatar = avatarService.findAvatarById(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-        headers.setContentLength(avatar.getData().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+    @GetMapping("/avg-age-student")
+    public int getAvgAgeStudent() {
+        return studentService.getAvgAgeStudent();
     }
 
-    @GetMapping(value = "{id}/avatar-from-file")
-    public void downLoadAvatar(@PathVariable long id, HttpServletResponse response) throws Exception {
-        Avatar avatar = avatarService.findAvatarById(id);
-        Path path = Paths.get(avatar.getFilePath());
-        try (InputStream in = Files.newInputStream(path);
-             OutputStream out = response.getOutputStream();
-        ) {
-            response.setStatus(200);
-            response.setContentType(avatar.getMediaType());
-            response.setContentLength((int) avatar.getFileSize());
-            in.transferTo(out);
-        }
+    @GetMapping("/count-student-number/{number}")
+    public ResponseEntity<Collection<Student>> getCountStudentNumber(@PathVariable int number) {
+        return ResponseEntity.ok(studentService.getCountStudentNumber(number));
     }
 }

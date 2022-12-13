@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -66,5 +68,15 @@ public class AvatarService {
 
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    public Collection<Avatar> getAvatarPager(int page, int count) {
+        int countAvatar = avatarRepository.getCountAvatar();
+        if (page > countAvatar && page < 1 ||
+                count > countAvatar && count < 1) {
+            throw new RuntimeException("Invalid number entered");
+        }
+        PageRequest pageRequest = PageRequest.of(page - 1, count);
+        return avatarRepository.findAll(pageRequest).getContent();
     }
 }
