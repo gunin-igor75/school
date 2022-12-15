@@ -1,17 +1,15 @@
-CREATE TABLE faculty
-(
-    id    SERIAL PRIMARY KEY,
-    name  CHARACTER VARYING(30),
-    color CHARACTER VARYING(30),
-    UNIQUE (name, color)
-);
+ALTER TABLE student
+    ADD CONSTRAINT age_constraint CHECK(age > 15);
 
-CREATE TABLE student
-(
-    id         SERIAL PRIMARY KEY,
-    name       CHARACTER VARYING(30) NOT NULL UNIQUE,
-    age        INTEGER DEFAULT 20
-        CONSTRAINT positive_age CHECK (age > 15),
-    faculty_id INTEGER,
-    FOREIGN KEY (faculty_id) REFERENCES faculty (id)
-);
+ALTER TABLE student
+    ADD CONSTRAINT name_unique UNIQUE (name);
+
+ALTER TABLE student
+    ALTER name SET NOT NULL ;
+
+ALTER TABLE faculty
+    ADD CONSTRAINT name_color_unique UNIQUE (name, color);
+
+ALTER TABLE student
+    ALTER age SET DEFAULT 20;
+
