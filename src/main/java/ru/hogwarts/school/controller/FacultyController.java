@@ -1,8 +1,12 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.exception_handling.NoSuchFacultyException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -18,8 +22,12 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyService.createFaculty(faculty);
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        if (faculty.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id must by empty");
+        }
+        Faculty newFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newFaculty);
     }
 
     @GetMapping("{id}")
@@ -33,8 +41,12 @@ public class FacultyController {
     }
 
     @PutMapping
-    public Faculty editFaculty(@RequestBody Faculty faculty) {
-        return facultyService.editFaculty(faculty);
+    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
+        Faculty newFaculty = facultyService.findFaculty(faculty.getId());
+        if (newFaculty == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(facultyService.editFaculty(newFaculty));
     }
 
     @DeleteMapping("{id}")
@@ -57,13 +69,20 @@ public class FacultyController {
         return faculties;
     }
 
-    @GetMapping(params = "color")
-    public Collection<Faculty> getAllFacultyEqualsColor(
-            @RequestParam(value = "color", required = false) String color) {
-        Collection<Faculty> faculties = facultyService.fetAllFacultyEqualsColor(color);
-        if (faculties == null) {
-            return Collections.emptyList();
+    @GetMapping(params = "colorName")
+    public Faculty getAllFacultyByColorOrName(
+            @RequestParam(value = "colorName", required = false) String colorName) {
+        Faculty faculty = facultyService.findFacultyByColorName(colorName);
+        if (faculty == null) {
+            throw new NoSuchFacultyException("There is no faculty with value = " + colorName +
+                    " in Database");
         }
-        return faculties;
+        return faculty;
     }
+
+    @GetMapping("/student{id}")
+    public Collection<Student> getStudentFaculty(@PathVariable long id) {
+        return facultyService.findStudents(id);
+    }
+
 }

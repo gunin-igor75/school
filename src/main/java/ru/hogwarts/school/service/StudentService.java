@@ -1,6 +1,8 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -32,10 +34,36 @@ public class StudentService {
     }
 
     public Collection<Student> getAllStudents() {
-        return studentRepository.findAll();
+        Collection<Student> collection = studentRepository.findAll();
+        System.out.println(collection);
+        return  collection;
     }
 
     public Collection<Student> getAllStudentEqualsAge(int age) {
         return studentRepository.findFacultyAge(age);
+    }
+
+    public Collection<Student> getAgeBetween(Integer minAge, Integer maxAge) {
+        return studentRepository.findAllByAgeBetween(minAge, maxAge);
+    }
+
+    public Faculty findFaculty(long id) {
+        Student student = findStudent(id);
+        return student.getFaculty();
+    }
+
+    public int getCountStudent() {
+        return studentRepository.getCountStudents();
+    }
+
+    public int getAvgAgeStudent() {
+        return studentRepository.getAvgAgeStudent();
+    }
+
+    public Collection<Student> getCountStudentNumber(int number) {
+        if (number > studentRepository.getCountStudents()) {
+            throw new RuntimeException("Invalid number entered");
+        }
+       return studentRepository.getCountStudentNumber(number);
     }
 }
